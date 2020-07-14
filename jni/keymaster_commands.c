@@ -33,10 +33,10 @@ int generate_keymaster_key(struct qcom_keymaster_handle* km_handle, uint8_t** ke
     }
 
 	//Dumping the keypair blob
-    printf("[+] Generated encrypted keypair blob!\n");
-    for (uint32_t i=0; i<*key_blob_length; i++)
-        printf("%02X", (*key_blob)[i]);
-    printf("\n");
+    //printf("[+] Generated encrypted keypair blob!\n");
+    //for (uint32_t i=0; i<*key_blob_length; i++)
+    //    printf("%02X", (*key_blob)[i]);
+    //printf("\n");
 
     return 0;
 }
@@ -342,7 +342,7 @@ int qcom_km_sign_data(struct qcom_keymaster_handle* km_handle,
     ion_fd_info.data[0].fd = ihandle.ifd_data_fd;
     ion_fd_info.data[0].cmd_buf_offset = sizeof(enum keymaster_cmd) +
          sizeof(struct qcom_km_key_blob) + sizeof(struct keymaster_rsa_sign_params);
-    /* some problem with ion_sbuffer, discard
+    /* some problems with ion_sbuffer, discard
     send_cmd = (struct keymaster_sign_data_cmd *)handle->ion_sbuffer;
     resp = (struct keymaster_sign_data_resp *)(handle->ion_sbuffer +
                             QSEECOM_ALIGN(sizeof(struct keymaster_sign_data_cmd)));
@@ -372,7 +372,8 @@ int qcom_km_sign_data(struct qcom_keymaster_handle* km_handle,
     resp->status = 0x01;//KEYMASTER_FAILURE;
 
     printf("origin: resp->sig_len = %02zx, resp->status = %02zx\n", resp->sig_len, resp->status);
-    printf("origin: keyblob = %02x %02x, data = %02x %02x\n", *(unsigned char *)(&send_cmd->key_blob), *((unsigned char *)(&send_cmd->key_blob)+1), *(unsigned char *)ihandle.ion_sbuffer, *((unsigned char *)ihandle.ion_sbuffer+1));
+    printf("origin: keyblob = %02x %02x, data = %02x %02x\n", *(unsigned char *)(&send_cmd->key_blob), *((unsigned char *)(&send_cmd->key_blob)+1), \
+                                                              *(unsigned char *)ihandle.ion_sbuffer, *((unsigned char *)ihandle.ion_sbuffer+1));
 
     ret = (*km_handle->QSEECom_set_bandwidth)(handle, true);
     if (ret < 0) {
@@ -382,15 +383,15 @@ int qcom_km_sign_data(struct qcom_keymaster_handle* km_handle,
     }
 
     printf("before send cmd!\n");
-    printf("[+] before resp data!\n");
-    for (uint32_t i=0; i<resp_size; i++)
-        printf("%02X", *((uint8_t *)resp+i));
-    printf("\n");
+    //printf("[+] before resp data!\n");
+    //for (uint32_t i=0; i<resp_size; i++)
+    //    printf("%02X", *((uint8_t *)resp+i));
+    //printf("\n");
 
     ret = (*km_handle->QSEECom_send_modified_cmd)(handle, send_cmd,
                                send_cmd_size, resp,
                                resp_size, &ion_fd_info);
-
+    
     printf("after send cmd!\n");
     printf("send_cmd->dlen = %02x!\n", send_cmd->dlen);
     
@@ -398,7 +399,8 @@ int qcom_km_sign_data(struct qcom_keymaster_handle* km_handle,
     printf("resp->cmd_id = %02x!\n", resp->cmd_id);
     printf("resp->status = %02x!\n", resp->status);
     printf("send_cmd size = %02x, resp size = %02zx!\n", send_cmd_size, resp_size);
-    printf("after: cmd keyblob = %02x %02x, data = %02x %02x\n", *(unsigned char *)(&send_cmd->key_blob), *((unsigned char *)(&send_cmd->key_blob)+1), *(unsigned char *)ihandle.ion_sbuffer, *((unsigned char *)ihandle.ion_sbuffer+1));
+    printf("after: cmd keyblob = %02x %02x, data = %02x %02x\n", *(unsigned char *)(&send_cmd->key_blob), *((unsigned char *)(&send_cmd->key_blob)+1), \
+                                                       *(unsigned char *)ihandle.ion_sbuffer, *((unsigned char *)ihandle.ion_sbuffer+1));
 
     printf("[+] send_cmd struct!\n");
     for (uint32_t i=0; i<16; i++)
@@ -412,10 +414,10 @@ int qcom_km_sign_data(struct qcom_keymaster_handle* km_handle,
     printf("resp pointer! %p\n", (uint32_t *)resp);
     printf("resp->sig_len pointer! %p\n", (uint32_t *)&(resp->sig_len));
 
-    printf("[+] after resp data!\n");
-    for (uint32_t i=0; i<resp_size; i++)
-        printf("%02X", *((uint8_t *)resp+i));
-    printf("\n");
+    //printf("[+] after resp data!\n");
+    //for (uint32_t i=0; i<resp_size; i++)
+    //    printf("%02X", *((uint8_t *)resp+i));
+    //printf("\n");
 
     if((*km_handle->QSEECom_set_bandwidth)(handle, false))
         printf("Sign data command: (unable to disable clks)");
@@ -448,7 +450,7 @@ int qcom_km_sign_data(struct qcom_keymaster_handle* km_handle,
         printf("[+] Printing signed data!\n");
 	printf("[+] resp data!\n");
         //for (uint32_t i=0; i<*signedDataLength; i++)
-	for (uint32_t i=0; i<8; i++)
+	for (uint32_t i=0; i<16; i++)
             printf("%02X", resp->signed_data[i]);
         printf("\n");
 	printf("[+] send_cmd data!\n");

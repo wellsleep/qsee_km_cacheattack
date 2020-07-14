@@ -64,7 +64,8 @@ struct qcom_keymaster_handle* initialize_keymaster_handle() {
     memset(handle, 0, sizeof(struct qcom_keymaster_handle));
 
 	//Getting the QSEECom library
-    handle->libhandle = dlopen("libQSEEComAPI.so", RTLD_NOW);
+    //handle->libhandle = dlopen("libQSEEComAPI.so", RTLD_NOW); change to load hooked lib
+    handle->libhandle = dlopen("/data/local/tmp/libQSEEComAPI.so", RTLD_NOW);
     if (!handle->libhandle) {
         perror("[-] Failed to load QSEEComAPI");
         return NULL;
